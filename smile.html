@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smile Shooter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(20, 20, 35, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 200, 255, 0.4);
+            text-align: center;
+            border: 1px solid rgba(0, 200, 255, 0.3);
+        }
+
+        h1 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
+        }
+
+        .subtitle {
+            color: #0096ff;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-label {
+            color: #0096ff;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #00d4ff;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+
+        canvas {
+            border: 3px solid #00d4ff;
+            border-radius: 10px;
+            background: #000;
+            cursor: crosshair;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, #00d4ff, #0096ff);
+            color: #000;
+            border: 1px solid rgba(0, 200, 255, 0.5);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #00e5ff, #00a8ff);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 200, 255, 0.5);
+        }
+
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 193, 7, 0.15);
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+            text-align: left;
+        }
+
+        .instructions h3 {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            color: #ccc;
+            margin-left: 20px;
+        }
+
+        .game-over {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 35, 0.98);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 200, 255, 0.6);
+            text-align: center;
+            display: none;
+            z-index: 1000;
+            border: 2px solid rgba(0, 200, 255, 0.5);
+        }
+
+        .game-over h2 {
+            color: #00d4ff;
+            margin-bottom: 20px;
+            font-size: 2em;
+            text-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
+        }
+
+        .game-over .final-score {
+            font-size: 3em;
+            color: #ffc107;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 700px) {
+            canvas {
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>😊 SMILE SHOOTER 🎯</h1>
+        <div class="subtitle">Restaurato da Turbo Pascal (1990s)</div>
+        
+        <div class="game-info">
+            <div class="info-item">
+                <div class="info-label">Punteggio</div>
+                <div class="info-value" id="score">0</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Tempo</div>
+                <div class="info-value" id="timer">30</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Record</div>
+                <div class="info-value" id="highscore">0</div>
+            </div>
+        </div>
+
+        <canvas id="gameCanvas" width="640" height="400"></canvas>
+
+        <div class="controls">
+            <button onclick="startGame()">🎮 Inizia Partita</button>
+            <button onclick="resetHighScore()">🔄 Reset Record</button>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 Istruzioni:</h3>
+            <ul>
+                <li>Usa il mouse per muovere il mirino</li>
+                <li>Clicca per sparare agli smile quando appaiono</li>
+                <li>Hai 30 secondi per fare più punti possibile!</li>
+                <li>Ogni smile colpito vale 10 punti</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="game-over" id="gameOver">
+        <h2>⏰ Tempo Scaduto!</h2>
+        <div class="final-score" id="finalScore">0</div>
+        <button onclick="startGame()">🔄 Gioca Ancora</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let score = 0;
+        let timeLeft = 30;
+        let highScore = localStorage.getItem('smileHighScore') || 0;
+        let gameActive = false;
+        let gameTimer = null;
+        let smileTimer = null;
+        
+        let mouseX = 320;
+        let mouseY = 200;
+        
+        let currentSmile = null;
+        
+        document.getElementById('highscore').textContent = highScore;
+
+        // Mouse tracking
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+        });
+
+        canvas.addEventListener('click', () => {
+            if (gameActive && currentSmile) {
+                checkHit();
+            }
+        });
+
+        function drawCrosshair() {
+            ctx.strokeStyle = '#00ffff';
+            ctx.lineWidth = 2;
+            
+            // Circle
+            ctx.beginPath();
+            ctx.arc(mouseX, mouseY, 15, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Crosshair lines
+            ctx.beginPath();
+            ctx.moveTo(mouseX - 25, mouseY);
+            ctx.lineTo(mouseX + 25, mouseY);
+            ctx.moveTo(mouseX, mouseY - 25);
+            ctx.lineTo(mouseX, mouseY + 25);
+            ctx.stroke();
+        }
+
+        function drawSmile(x, y, radius) {
+            // Face
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Eyes
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(x - radius/3, y - radius/3, radius/8, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(x + radius/3, y - radius/3, radius/8, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Smile
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(x, y, radius/2, 0, Math.PI, false);
+            ctx.stroke();
+        }
+
+        function spawnSmile() {
+            if (!gameActive) return;
+            
+            const x = Math.random() * (canvas.width - 60) + 30;
+            const y = Math.random() * (canvas.height - 60) + 30;
+            const radius = 25;
+            
+            currentSmile = { x, y, radius };
+            
+            // Hide smile after a short time
+            setTimeout(() => {
+                currentSmile = null;
+            }, 800);
+        }
+
+        function checkHit() {
+            if (!currentSmile) return;
+            
+            const dx = mouseX - currentSmile.x;
+            const dy = mouseY - currentSmile.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance <= currentSmile.radius) {
+                // Hit!
+                score += 10;
+                document.getElementById('score').textContent = score;
+                
+                // Flash effect
+                ctx.fillStyle = '#ff0000';
+                ctx.beginPath();
+                ctx.arc(currentSmile.x, currentSmile.y, currentSmile.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Play hit animation
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(() => {
+                        ctx.strokeStyle = i % 2 === 0 ? '#ff0000' : '#ffff00';
+                        ctx.lineWidth = 3;
+                        ctx.beginPath();
+                        ctx.arc(currentSmile.x, currentSmile.y, i * 2, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }, i * 10);
+                }
+                
+                currentSmile = null;
+            }
+        }
+
+        function updateTimer() {
+            timeLeft--;
+            document.getElementById('timer').textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                endGame();
+            }
+        }
+
+        function gameLoop() {
+            if (!gameActive) return;
+            
+            // Clear canvas
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw current smile if exists
+            if (currentSmile) {
+                drawSmile(currentSmile.x, currentSmile.y, currentSmile.radius);
+            }
+            
+            // Draw crosshair
+            drawCrosshair();
+            
+            requestAnimationFrame(gameLoop);
+        }
+
+        function startGame() {
+            // Reset
+            score = 0;
+            timeLeft = 30;
+            gameActive = true;
+            currentSmile = null;
+            
+            document.getElementById('score').textContent = score;
+            document.getElementById('timer').textContent = timeLeft;
+            document.getElementById('gameOver').style.display = 'none';
+            
+            // Clear any existing timers
+            if (gameTimer) clearInterval(gameTimer);
+            if (smileTimer) clearInterval(smileTimer);
+            
+            // Start timers
+            gameTimer = setInterval(updateTimer, 1000);
+            smileTimer = setInterval(spawnSmile, 1200);
+            
+            // Start game loop
+            gameLoop();
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(gameTimer);
+            clearInterval(smileTimer);
+            
+            // Check high score
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('smileHighScore', highScore);
+                document.getElementById('highscore').textContent = highScore;
+            }
+            
+            // Show game over
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('gameOver').style.display = 'block';
+        }
+
+        function resetHighScore() {
+            if (confirm('Vuoi davvero azzerare il record?')) {
+                highScore = 0;
+                localStorage.setItem('smileHighScore', 0);
+                document.getElementById('highscore').textContent = 0;
+            }
+        }
+
+        // Initial draw
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#00ff00';
+        ctx.font = '24px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Clicca "Inizia Partita" per giocare!', canvas.width/2, canvas.height/2);
+    </script>
+</body>
+</html>

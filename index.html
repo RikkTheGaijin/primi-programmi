@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Primi Programmi - Restaurati</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 200, 255, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+
+        .description {
+            font-size: 1em;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .game-card {
+            background: rgba(20, 20, 35, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: #fff;
+            display: block;
+            border: 1px solid rgba(0, 200, 255, 0.2);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 200, 255, 0.4);
+            background: rgba(30, 30, 50, 0.95);
+            border-color: rgba(0, 200, 255, 0.5);
+        }
+
+        .game-icon {
+            font-size: 4em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .game-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #00d4ff;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
+        }
+
+        .game-description {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9em;
+            color: #888;0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tech-info h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
+        }
+
+        .tech-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #00d4ff;
+        }
+
+        .tech-item h3 {
+            margin-bottom: 10px;
+            color: #00d4ff;
+        }
+
+        .tech-item ul {
+            list-style-position: inside;
+            line-height: 1.8;
+            color: #ccc;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer p {
+            margin: 10px 0;
+            opacity: 0.8;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background: linear-gradient(135deg, #00d4ff, #0096ff);
+            color: #000;
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-top: 10px;
+            box-shadow: 0 0 10px rgba(0, 200, 255, 0.3);
+        }
+
+        @media (max-width: 1024px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 I PRIMI PROGRAMMI 🕹️</h1>
+            <div class="subtitle">Restaurati e Modernizzati - Dagli Anni '90 ad Oggi</div>
+            <p class="description">
+                Benvenuto! Questa è una collezione di giochi vintage degli anni '90, 
+                originariamente scritti in DOS Batch e Turbo Pascal, ora completamente 
+                restaurati e convertiti in moderne applicazioni web HTML5/JavaScript.
+                Gioca direttamente dal browser, nessun download necessario!
+            </p>
+        </header>
+
+        <div class="games-grid">
+            <a href="adventure.html" class="game-card">
+                <div class="game-icon">🎈</div>
+                <div class="game-title">L'Avventura del Pallone Aerostatico</div>
+                <div class="game-description">
+                    Un'emozionante avventura testuale interattiva in stile "Choose Your Own Adventure". 
+                    Viaggia in Francia, affronta tempeste, esplora il deserto del Sahara e scopri 
+                    misteri nascosti. Oltre 100 scene diverse con finali multipli!
+                </div>
+                <div class="game-meta">
+                    <span>📜 Avventura Testuale</span>
+                    <span>⏱️ 15-30 min</span>
+                </div>
+                <div class="badge">ORIGINALE: DOS BATCH</div>
+            </a>
+
+            <a href="tris.html" class="game-card">
+                <div class="game-icon">⭕❌</div>
+                <div class="game-title">Tris</div>
+                <div class="game-description">
+                    Il classico gioco del tris (tic-tac-toe) con grafica moderna e un'intelligenza 
+                    artificiale sfidante. Riesci a battere il computer? Traccia le tue vittorie 
+                    e pareggi con il sistema di punteggio integrato.
+                </div>
+                <div class="game-meta">
+                    <span>🎯 Strategia</span>
+                    <span>⏱️ 2-5 min</span>
+                </div>
+                <div class="badge">ORIGINALE: TURBO PASCAL</div>
+            </a>
+
+            <a href="smile.html" class="game-card">
+                <div class="game-icon">😊🎯</div>
+                <div class="game-title">Smile Shooter</div>
+                <div class="game-description">
+                    Un frenetico gioco arcade di tiro al bersaglio! Gli smile appaiono casualmente 
+                    sullo schermo per pochi istanti. Hai 30 secondi per colpirne il maggior numero 
+                    possibile. Ogni colpo vale 10 punti. Batti il tuo record!
+                </div>
+                <div class="game-meta">
+                    <span>🎮 Arcade</span>
+                    <span>⏱️ 30 sec</span>
+                </div>
+                <div class="badge">ORIGINALE: TURBO PASCAL</div>
+            </a>
+
+            <a href="fragga.html" class="game-card">
+                <div class="game-icon">🚀👾</div>
+                <div class="game-title">Fragga l'Alieno</div>
+                <div class="game-description">
+                    Uno space shooter classico in pieno stile arcade anni '90! Controlla la tua 
+                    navicella spaziale, distruggi le navi aliene che scendono dall'alto, raccogli 
+                    power-ups e batti il tuo record. Azione frenetica e adrenalinica!
+                </div>
+                <div class="game-meta">
+                    <span>👾 Space Shooter</span>
+                    <span>⏱️ Infinito</span>
+                </div>
+                <div class="badge">ORIGINALE: TURBO PASCAL (995 RIGHE!)</div>
+            </a>
+        </div>
+
+        <div class="tech-info">
+            <h2>🔧 Informazioni Tecniche</h2>
+            <div class="tech-details">
+                <div class="tech-item">
+                    <h3>📂 Originali</h3>
+                    <ul>
+                        <li>97+ file .bat DOS</li>
+                        <li>Turbo Pascal 7.0</li>
+                        <li>BGI Graphics Library</li>
+                        <li>DOS Sound API</li>
+                        <li>16-bit executables</li>
+                    </ul>
+                </div>
+                <div class="tech-item">
+                    <h3>✨ Restaurati in</h3>
+                    <ul>
+                        <li>HTML5</li>
+                        <li>CSS3 (animazioni)</li>
+                        <li>JavaScript (ES6+)</li>
+                        <li>Canvas API</li>
+                        <li>LocalStorage API</li>
+                    </ul>
+                </div>
+                <div class="tech-item">
+                    <h3>🎨 Caratteristiche</h3>
+                    <ul>
+                        <li>100% web-based</li>
+                        <li>Responsive design</li>
+                        <li>Nessuna installazione</li>
+                        <li>Salvataggio progressi</li>
+                        <li>Cross-platform</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="tech-info">
+            <h2>📚 Altri Programmi nella Collezione Originale</h2>
+            <p style="text-align: center; margin-bottom: 20px; line-height: 1.8;">
+                La cartella conteneva anche altri programmi interessanti che potrebbero essere 
+                restaurati in futuro:
+            </p>
+            <div class="tech-details">
+                <div class="tech-item">
+                    <h3>🚀 Fragga (Space Shooter)</h3>
+                    Un gioco spaziale completo con navicelle, laser, bombe ed esplosioni.
+                    Il codice originale conta quasi 1000 righe di Pascal!
+                </div>
+                <div class="tech-item">
+                    <h3>🎹 KeySound</h3>
+                    Un'applicazione musicale che permetteva di suonare note usando i tasti F1-F10,
+                    con controllo del delay e interfaccia grafica colorata.
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>🕰️ Viaggio nel Tempo della Programmazione</strong></p>
+            <p>Questi programmi rappresentano i primi passi nella programmazione di 
+               <strong>Riccardo</strong> ed <strong>Eugenio</strong> negli anni '90.</p>
+            <p>Restaurati con amore nel 2026 usando tecnologie web moderne.</p>
+            <p style="margin-top: 20px; font-size: 0.9em;">
+                💾 Compatibilità: Chrome, Firefox, Safari, Edge (versioni recenti)
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
